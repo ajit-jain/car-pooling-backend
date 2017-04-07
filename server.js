@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var port = process.env.port || 8000;
+require('dotenv').config();
 var mongoose = require("mongoose");
 mongoose.Promise=require('bluebird');
 var passport = require("passport");
@@ -32,6 +32,6 @@ app.use(flash());
 require("./config/passport.js")(passport);
 require('./app/routes.js')(app,passport);
 
-app.listen(port,"localhost",()=>{
-    console.log("Server running on port:",port);
+app.listen(process.env.port,"localhost",()=>{
+    console.log("Server running on port:",process.env.port);
 })
