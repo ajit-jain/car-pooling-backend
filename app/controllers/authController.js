@@ -84,6 +84,7 @@ module.exports ={
                     console.log("User After Updation ",updateduser.local.token);
                     return updateduser;
                 }).apply(this).then((user)=>{
+                   // res.redirect('/profile');
                     res.status(200).json({success:true,data:{token:user.local.token,active:true},message:info});
                 })
                 
@@ -92,7 +93,4 @@ module.exports ={
             
         })(req,res,next);
     },
-    generateNewTokenAndUpdate(req,res,next){
-
-    }
 }
