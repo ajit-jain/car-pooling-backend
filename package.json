@@ -31,6 +31,9 @@
     "passport-twitter": "~1.0.2",
     "socket.io": "^1.7.3"
   },
+  "engines": {
+    "node": "7.8.0"
+  },
   "author": "",
   "license": "ISC"
 }
