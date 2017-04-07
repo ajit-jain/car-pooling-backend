@@ -46,7 +46,7 @@ app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(flash());
 require("./config/passport.js")(passport);
-require('./app/routes.js')(app,passport);
+require('./app/routes')(app,passport);
 
 app.listen(process.env.port,"localhost",()=>{
     console.log("Server running on port:",process.env.port);
