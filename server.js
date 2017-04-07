@@ -11,7 +11,16 @@ var morgan = require("morgan");
 var session = require("express-session");
 
 var configDB=require("./config/database.js");
-mongoose.connect(configDB.url); // connect to our database
+mongoose.connect(configDB.url, (conn)=>{
+  console.log('connection', conn)
+}); 
+mongoose.connection.on('close',(err)=>{
+  console.log(' close',err);
+});
+mongoose.connection.on('error',(err)=>{
+  console.log('error',err);
+});
+// connect to our database
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'POST');
