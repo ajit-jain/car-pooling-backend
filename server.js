@@ -11,11 +11,12 @@ var morgan = require("morgan");
 var session = require("express-session");
 
 var configDB=require("./config/database.js");
+console.log(configDB.url);
 mongoose.connect(configDB.url, (conn)=>{
-  console.log('connection', conn)
+  // console.log('connection', conn)
 }); 
-mongoose.connection.on('close',(err)=>{
-  console.log(' close',err);
+mongoose.connection.on('connected',(con)=>{
+  console.log(' close',con);
 });
 mongoose.connection.on('error',(err)=>{
   console.log('error',err);
