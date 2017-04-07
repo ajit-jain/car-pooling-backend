@@ -15,9 +15,15 @@ console.log(configDB.url);
 mongoose.connect(configDB.url, (conn)=>{
   // console.log('connection', conn)
 }); 
-mongoose.connection.on('connected',(con)=>{
-  console.log(' close',con);
+// mongoose.connection.on('connected',(con)=>{
+//   console.log(' close',con);
+// });
+mongoose.connection.once('open', function() {
+  // Wait for the database connection to establish, then start the app.      
+  console.log("Connected to database")     
+                
 });
+
 mongoose.connection.on('error',(err)=>{
   console.log('error',err);
 });
