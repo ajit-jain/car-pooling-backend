@@ -7,6 +7,7 @@ module.exports={
     saveUser:function(obj){
         var newUser=new User();
         newUser.local.email = obj.email;
+        newUser.local.username = obj.username;
         newUser.local.mobile=obj.mobile;
         newUser.local.password = newUser.generateHash(obj.password);
         newUser.local.token = jwt.sign({id:obj.email},"iloveprogramming");
@@ -20,12 +21,12 @@ module.exports={
     },
     updateStatus(obj){
         return User.findOneAndUpdate({'local.email':obj.email},{$set:{'local.active':true}},
-        {new:true,projection:{"local.token":1,_id:0,"local.active":1}});
+        {new:true,projection:{"_id":0,"__v":0}});
     },
     genNewTokenAndUpdateUser(user){
         return User.findOneAndUpdate({'local.email':user.local.email},
             {$set:{'local.token':jwt.sign({id:user.local.email},"iloveprogramming")}},
-            {new:true,projection:{"local.token":1,"local.active":true}});
+            {new:true,projection:{"_id":0,"__v":0}});
     }
         
 }

@@ -38,7 +38,8 @@ module.exports=function(passport){
                     var user=yield auth.saveUser({
                         email:email,
                         password:password,
-                        mobile:req.body.mobile
+                        mobile:req.body.mobile,
+                        username:req.body.username
                     });
                     return ({err:null,user:user,msg:"successful signup"});
 

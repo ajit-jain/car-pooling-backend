@@ -41,11 +41,16 @@ module.exports ={
             if(user.local.otp == req.body.otp){
                 var result= yield auth.updateStatus({email:user.local.email});
                 console.log(result);
-                return ({token:result.local.token,message:"Successful SignIn"});
+                let obj={
+                        token:result.local.token,username:result.local.username,
+                        active:true,email:result.local.email,mobile:result.local.mobile
+                    };
+               return ({success:true,data:obj,message:"Successful SignIn"});
             }
             else
-                return ({token:null,message:"Wrong Otp"}); 
+                return ({success:false,data:null,message:"Wrong Otp"}); 
         }).apply(this).then((obj)=>{
+                 
                 res.status(200).json(obj);
         }).catch((err)=>{
                 res.status(200).json({success:false,message:err.message});
@@ -84,8 +89,11 @@ module.exports ={
                     console.log("User After Updation ",updateduser.local.token);
                     return updateduser;
                 }).apply(this).then((user)=>{
-                   // res.redirect('/profile');
-                    res.status(200).json({success:true,data:{token:user.local.token,active:true},message:info});
+                    let obj={
+                        token:user.local.token,username:user.local.username,
+                        active:true,email:user.local.email,mobile:user.local.mobile
+                    };
+                    res.status(200).json({success:true,data:obj,message:info});
                 })
                 
             }
