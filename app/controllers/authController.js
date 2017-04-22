@@ -90,6 +90,7 @@ module.exports ={
                     return updateduser;
                 }).apply(this).then((user)=>{
                     let obj={
+                        _id:user._id,
                         token:user.local.token,username:user.local.username,
                         active:true,email:user.local.email,mobile:user.local.mobile
                     };
@@ -101,4 +102,28 @@ module.exports ={
             
         })(req,res,next);
     },
+    saveDetails(req,res,next){
+        PromiseLib.coroutine(function*(){
+            if(!req.body._id)
+                throw new Error("Not Authorized");
+            let user = yield auth.saveDetails(req.body);
+            return user;
+        }).apply(this).then(data=>{
+            console.log("data entered",data);
+            res.status(200).json({success:true,data:null,message:"Details Entered Successfully"});
+        }).catch(err=>{
+            console.log("Error",err);
+            res.status(200).json({success:false,data:null,message:(err.message)?err.message:err});
+        })
+    },
+    getUser(req,res,next){
+        PromiseLib.coroutine(function*(){
+            console.log(req.body._id);
+            user = yield auth.findUserById(req.body._id);
+            return user;
+        }).apply(this)
+        .then((data)=>{
+            res.status(200).json({success:true,data:data,message:"User finded"});
+        })
+    }
 }

@@ -1,4 +1,4 @@
-var User=require("../app/models/user.js");
+var User=require("../app/models/user.js").User;
 var Promise = require('bluebird');
 var auth = require("../app/helpers/authOperations");
 var LocalStrategy = require("passport-local").Strategy;

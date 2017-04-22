@@ -1,4 +1,4 @@
 module.exports={
-    apiKey:'18157f5c',
-    apiSecret:'6779111a2706c9cb'
+    apiKey: process.env.NEXMO_KEY,
+    apiSecret:process.env.NEXMO_SECRET
 }

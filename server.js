@@ -15,9 +15,6 @@ console.log(configDB.url);
 mongoose.connect(configDB.url, (conn)=>{
   // console.log('connection', conn)
 }); 
-// mongoose.connection.on('connected',(con)=>{
-//   console.log(' close',con);
-// });
 mongoose.connection.once('open', function() {
   // Wait for the database connection to establish, then start the app.      
   console.log("Connected to database")     
@@ -43,11 +40,11 @@ app.set('view engine','ejs');
 
 app.use(session({secret:"myfirstAuthImplemnetation"}));
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session());
 // app.use(flash());
 require("./config/passport.js")(passport);
 require('./app/routes')(app,passport);
 
 app.listen(process.env.port,"localhost",()=>{
-    console.log("Server running on port:",process.env.port);
+    console.log("Server running on port:",process.env.PORT);
 })

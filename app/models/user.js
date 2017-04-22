@@ -1,7 +1,7 @@
-var mongoose = require("mongoose");
-var bycrypt = require("bcrypt-nodejs");
-
-var userSchema= mongoose.Schema({
+let mongoose = require("mongoose");
+let bycrypt = require("bcrypt-nodejs");
+let Schema = mongoose.Schema;
+let userSchema= Schema({
     local:{
         username:String,
         email:String,
@@ -28,7 +28,38 @@ var userSchema= mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
-    }
+    },
+    details:{type:Schema.Types.ObjectId,ref:'Userdetail'}
+});
+let CompanySchema = Schema({
+    company_name:String,
+    designation : String,
+    address : String
+});
+let BusinessSchema = Schema({
+    business_name:String,
+    tel : String,
+    address : String
+});
+let CompanyDetail =mongoose.model('CompanyDetail',CompanySchema);
+let BusinessDetail =  mongoose.model('BusinessDetail',BusinessSchema);
+let Userdetail = Schema({
+    user:{type:Schema.Types.ObjectId,ref:'user'},
+    gender : {
+            type:String,
+            enum:['Male','Female','Trans'],
+            default:'Male'    
+        },
+    user_type:{
+            type:String,
+            enum:['pooler','seeker','both'],
+            default:'pooler'    
+        },
+    address:{type:String},
+    CompanyDetails: {type:Object,ref:'CompanyDetail'},
+    BusinessDetails : {type:Object,ref:'BusinessDetail'}
+
+    
 });
 
 userSchema.methods.generateHash=function(password){
@@ -40,4 +71,9 @@ userSchema.methods.validPassword=function(password){
     //console.log();
     return bycrypt.compareSync(password,this.local.password);
 }
-module.exports=mongoose.model('user',userSchema);
+module.exports={
+    User : mongoose.model('user',userSchema),
+    UserDetails : mongoose.model('Userdetail',Userdetail),
+    CompanyDetails:CompanyDetail,
+    BusinessDetails:BusinessDetail
+};
