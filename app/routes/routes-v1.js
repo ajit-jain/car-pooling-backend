@@ -1,7 +1,7 @@
 
 const authController = require("../controllers/authController"); 
 var router=require('express').Router();
-var isAuthenticated = require('../middleWares/is-authenticated.js');
+var isAuthenticated = require('../middleWares/is-authenticated');
 module.exports=function(passport){
     router.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
@@ -15,8 +15,7 @@ module.exports=function(passport){
     router.post('/login',authController.loginController);
     router.post('/signup',authController.signupController);
     router.post('/verify',authController.verifyUser);
-    router.post('/details',authController.saveDetails);
-    router.get('/profile',isAuthenticated);
-    router.post('/getUser',authController.getUser);
+    router.post('/details',isAuthenticated,authController.saveDetails);
+    router.get('/getUser',isAuthenticated,authController.getUser);
     return router;
 }

@@ -1,9 +1,10 @@
-let User=require("../models/user.js").User;
-let UserDetails = require("../models/user.js").UserDetails;
-let companyDetails =require("../models/user.js").CompanyDetails;
-let businessDetails = require("../models/user.js").BusinessDetails;
-let PromiseLib = require('bluebird');
-let jwt = require('jsonwebtoken');
+const User=require("../models/user.js").User;
+const UserDetails = require("../models/user.js").UserDetails;
+const companyDetails =require("../models/user.js").CompanyDetails;
+const businessDetails = require("../models/user.js").BusinessDetails;
+const PromiseLib = require('bluebird');
+const jwt = require('jsonwebtoken');
+const jwtConfig = require('../../config/jwt');
 module.exports={
     findUser:function(email){
        return User.findOne({ 'local.email' :  email },{__v:0}) 
@@ -17,7 +18,7 @@ module.exports={
         newUser.local.username = obj.username;
         newUser.local.mobile=obj.mobile;
         newUser.local.password = newUser.generateHash(obj.password);
-        newUser.local.token = jwt.sign({id:obj.email},"iloveprogramming");
+        newUser.local.token = jwt.sign({id:obj.email},jwtConfig.jwtSecret);
         newUser.local.active = false;
         return newUser.save();
     },
@@ -28,11 +29,11 @@ module.exports={
     },
     updateStatus(obj){
         return User.findOneAndUpdate({'local.email':obj.email},{$set:{'local.active':true}},
-        {new:true,projection:{"_id":0,"__v":0}});
+        {new:true,projection:{"__v":0}});
     },
     genNewTokenAndUpdateUser(user){
         return User.findOneAndUpdate({'local.email':user.local.email},
-            {$set:{'local.token':jwt.sign({id:user.local.email},"iloveprogramming")}},
+            {$set:{'local.token':jwt.sign({id:user.local.email},jwtConfig.jwtSecret)}},
             {new:true,projection:{"__v":0}});
     },
     updateUser(userId,detailsId){

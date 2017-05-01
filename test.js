@@ -10,7 +10,8 @@
 // }
 // console.log(Object.keys(obj));
 
+const obj2=require('./test.js') ;
 
-process.nextTick(()=>{console.log(30)});           
-console.log(40);
-setTimeout(()=>{console.log(20)},0)
+console.log("test1",obj2.name);
+let obj ={name : "Agag"};
+module.exports=obj;

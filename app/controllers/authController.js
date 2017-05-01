@@ -13,11 +13,11 @@ module.exports ={
             }
             else{
                 // controller
-                console.log("User inserted")
-                PromiseLib.coroutine(function*(){
-                    var otpResult=yield otpSender(req.body.mobile);
+                console.log("User inserted");
+                (async function signupOps(){
+                    var otpResult=await otpSender(req.body.mobile);
                     console.log(otpResult);
-                    var  result= yield auth.updateOtpOfUser({email:user.local.email,otp:otpResult.otp});
+                    var  result= await auth.updateOtpOfUser({email:user.local.email,otp:otpResult.otp});
                     console.log(result);
                     return ({success:true,message:info});
                 }).apply(this).then((obj)=>{
@@ -42,7 +42,7 @@ module.exports ={
                 var result= yield auth.updateStatus({email:user.local.email});
                 console.log(result);
                 let obj={
-                        token:result.local.token,username:result.local.username,
+                        token:result.local.token,username:result.local.username,details:result.details,
                         active:true,email:result.local.email,mobile:result.local.mobile
                     };
                return ({success:true,data:obj,message:"Successful SignIn"});
@@ -69,10 +69,10 @@ module.exports ={
                 res.status(200).json({success:false,data:null,"message":info});
             }
             else if(!(user.local.active)){
-                PromiseLib.coroutine(function*(){
-                    var otpResult=yield otpSender(user.local.mobile);
+                (async function loginInOps(){
+                    var otpResult=await otpSender(user.local.mobile);
                     console.log(otpResult);
-                    var  result= yield auth.updateOtpOfUser({email:user.local.email,otp:otpResult.otp});
+                    var  result= await auth.updateOtpOfUser({email:user.local.email,otp:otpResult.otp});
                     return ({success:true,data:{token:null,active:false},message:"verify Number"});
                 }).apply(this).then((obj)=>{
                     res.status(200).json(obj);
@@ -83,14 +83,14 @@ module.exports ={
             }
             else{
                 console.log("In Successful Login");
-                PromiseLib.coroutine(function*(){
+               (async function updateUser(){
                     console.log("User Before Updation ",user.local.token);
-                    var updateduser = yield auth.genNewTokenAndUpdateUser(user);
+                    var updateduser = await auth.genNewTokenAndUpdateUser(user);
                     console.log("User After Updation ",updateduser.local.token);
                     return updateduser;
                 }).apply(this).then((user)=>{
                     let obj={
-                        _id:user._id,
+                        _id:user._id,details:user.details,
                         token:user.local.token,username:user.local.username,
                         active:true,email:user.local.email,mobile:user.local.mobile
                     };
@@ -103,6 +103,7 @@ module.exports ={
         })(req,res,next);
     },
     saveDetails(req,res,next){
+        
         PromiseLib.coroutine(function*(){
             if(!req.body._id)
                 throw new Error("Not Authorized");
@@ -117,13 +118,20 @@ module.exports ={
         })
     },
     getUser(req,res,next){
+       
         PromiseLib.coroutine(function*(){
-            console.log(req.body._id);
-            user = yield auth.findUserById(req.body._id);
+            console.log(req.user._id);
+            user = yield auth.findUserById(req.user._id);
             return user;
         }).apply(this)
-        .then((data)=>{
+        .then((user)=>{
+            let data = {
+                username:user.local.email,
+                mobile:user.local.mobile,
+                email:user.local.email
+            }
             res.status(200).json({success:true,data:data,message:"User finded"});
         })
-    }
+    },
+   
 }
